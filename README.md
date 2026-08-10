@@ -97,6 +97,27 @@ ngrok http 3001
 
 Point `SHOP_URL`, `API_URL` and `NEXT_PUBLIC_API_URL` at the ngrok URL (and keep the Paystack/Twilio webhook URLs pointed there too).
 
+## Running tests
+
+The suite runs against a dedicated `mctaba_shop_test` database — it refuses to run anywhere else, so your dev data is never touched.
+
+```bash
+# One-time setup: create the test database and apply the schema
+# (run as a Postgres superuser, e.g. the postgres account)
+psql -U postgres -d postgres -c "CREATE DATABASE mctaba_shop_test;"
+psql -U postgres -d postgres -c "ALTER DATABASE mctaba_shop_test OWNER TO <db-user>;"
+
+psql "postgresql://<db-user>:<password>@localhost:5432/mctaba_shop_test" -f server/schema.sql
+
+# Server tests — payment settlement, order lifecycle, checkout,
+# webhook signature verification, admin auth (28 tests)
+cd server
+npm test
+
+# Storefront tests — cart logic (9 tests)
+npm test
+```
+
 ## Payment flow
 
 1. Checkout creates the order and reserves stock inside a database transaction
