@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "dev:proxy": "node dev-proxy.js"
+    "dev:proxy": "node dev-proxy.js",
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\""
   },
   "imports": {
     "#controllers/*": "./src/controllers/*",

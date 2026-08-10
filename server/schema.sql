@@ -2,8 +2,13 @@
 -- Mirrors the existing local database (uuid PKs, order_status enum).
 -- Apply with: psql "postgresql://mctaba_user:<password>@localhost:5432/mctaba_shop" -f schema.sql
 
-CREATE TYPE IF NOT EXISTS order_status AS ENUM
-  ('pending', 'paid', 'failed', 'cancelled', 'shipped', 'delivered');
+DO $$
+BEGIN
+  CREATE TYPE order_status AS ENUM
+    ('pending', 'paid', 'failed', 'cancelled', 'shipped', 'delivered');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS products (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
