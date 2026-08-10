@@ -1,0 +1,28 @@
+{
+  "name": "shop-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "dev:proxy": "node dev-proxy.js"
+  },
+  "imports": {
+    "#controllers/*": "./src/controllers/*",
+    "#services/*": "./src/services/*",
+    "#middleware/*": "./src/middleware/*",
+    "#repositories/*": "./src/repositories/*",
+    "#infrastructure/*": "./src/infrastructure/*",
+    "#routes/*": "./src/routes/*",
+    "#utils/*": "./src/utils/*",
+    "#handlers/*": "./src/handlers/*"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.22.0",
+    "twilio": "^6.0.2"
+  }
+}
