@@ -1,95 +1,155 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import ProductCard from "@/app/components/ProductCard";
+import { apiFetch } from "@/lib/api";
+import Link from "next/link";
 
-export default function Home() {
+export const metadata = {
+  title: "Mctaba Shop",
+  description:
+    "Good things at fair prices — phones, accessories and more with secure Paystack checkout.",
+};
+
+function pillClass(active) {
+  return active
+    ? "rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white"
+    : "rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition";
+}
+
+export default async function HomePage() {
+  let products = [];
+  let categories = [];
+  let error = null;
+
+  try {
+    [categories, products] = await Promise.all([
+      apiFetch("/api/products/categories")
+        .then((d) => d.categories || [])
+        .catch(() => []),
+      apiFetch("/api/products")
+        .then((d) => d.products || [])
+        .catch(() => []),
+    ]);
+  } catch (err) {
+    console.error(err);
+    error = err.message;
+  }
+
+  const featured = products.slice(0, 4);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main>
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-6 pt-20 pb-16 text-center">
+        <h1 className="text-5xl font-bold tracking-tight text-gray-900">
+          Welcome to Mctaba Shop
+        </h1>
+        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
+          Good things at fair prices. Phones, accessories and more — pay
+          securely with M-Pesa or card.
+        </p>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/products"
+            className="rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700"
           >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
+            Browse Products
+          </Link>
+          <Link
+            href="/about"
+            className="rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:text-gray-900"
           >
-            Read our docs
-          </a>
+            About Us
+          </Link>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* Category shortcuts */}
+        {categories.length > 0 && (
+          <nav
+            aria-label="Browse by category"
+            className="mt-10 flex flex-wrap items-center justify-center gap-2"
+          >
+            <span className="text-sm text-gray-500">Shop by category:</span>
+            {categories.map((c) => (
+              <Link
+                key={c}
+                href={`/products?category=${encodeURIComponent(c)}`}
+                className={pillClass(false)}
+              >
+                {c}
+              </Link>
+            ))}
+          </nav>
+        )}
+      </section>
+
+      {/* ── Featured products ─────────────────────────────────────────── */}
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-7xl px-6 pb-20">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Featured</h2>
+              <p className="mt-1 text-gray-600">
+                A few of our bestsellers.
+              </p>
+            </div>
+            <Link
+              href="/products"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            >
+              View all →
+            </Link>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Trust strip ───────────────────────────────────────────────── */}
+      <section className="border-t border-gray-100 bg-gray-50">
+        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-10 sm:grid-cols-3">
+          <div className="text-center">
+            <div className="text-2xl">🔒</div>
+            <h3 className="mt-2 font-semibold text-gray-900">
+              Secure payments
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              Checkout is processed securely by Paystack.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl">💳</div>
+            <h3 className="mt-2 font-semibold text-gray-900">
+              M-Pesa or card
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              Pay with mobile money or your debit card.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl">💬</div>
+            <h3 className="mt-2 font-semibold text-gray-900">
+              WhatsApp confirmations
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              Get your order confirmation on WhatsApp.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* If the API is down, the page still shows the hero */}
+      {error && featured.length === 0 && (
+        <section className="mx-auto max-w-7xl px-6 pb-20">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
+            <h2 className="font-semibold">Products are temporarily unavailable</h2>
+            <p className="mt-2 text-sm">Please try again in a moment.</p>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
