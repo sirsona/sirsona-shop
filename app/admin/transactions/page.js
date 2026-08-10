@@ -85,7 +85,7 @@ export default function AdminTransactionsPage() {
                   >
                     <td className="px-5 py-3">
                       <Link
-                        href={`/orders/${t.reference}`}
+                        href={`/admin/orders/${t.reference}`}
                         className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
                       >
                         {shortReference(t.reference)}

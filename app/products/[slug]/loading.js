@@ -1,111 +1,36 @@
-// app/products/[slug]/loading.js
+import Skeleton from "@/app/components/ui/Skeleton";
+
 export default function ProductDetailLoading() {
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
-      {/* Skeleton for breadcrumb */}
-      <div
-        style={{
-          height: 16,
-          background: "#eee",
-          borderRadius: 4,
-          width: "40%",
-          marginBottom: "1.5rem",
-        }}
-      />
+    <div className="mx-auto max-w-7xl px-6 py-12">
+      {/* Breadcrumb */}
+      <Skeleton className="mb-8 h-4 w-64" />
 
-      {/* Skeleton for the product layout (2‑column grid) */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "2rem",
-        }}
-      >
-        {/* Left: Product image skeleton */}
-        <div
-          style={{
-            width: "100%",
-            aspectRatio: "1 / 1",
-            background: "#eee",
-            borderRadius: 8,
-          }}
-        />
+      {/* Product layout — 2 columns on desktop */}
+      <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-2">
+        {/* Left: image */}
+        <Skeleton className="aspect-square w-full rounded-2xl" />
 
-        {/* Right: Product details skeleton */}
-        <div>
-          {/* Title skeleton */}
-          <div
-            style={{
-              height: 32,
-              background: "#eee",
-              borderRadius: 4,
-              width: "80%",
-              marginBottom: "0.5rem",
-            }}
-          />
-
-          {/* Price skeleton */}
-          <div
-            style={{
-              height: 24,
-              background: "#eee",
-              borderRadius: 4,
-              width: "50%",
-              marginBottom: "0.5rem",
-            }}
-          />
-
-          {/* Stock status skeleton */}
-          <div
-            style={{
-              height: 16,
-              background: "#eee",
-              borderRadius: 4,
-              width: "35%",
-              marginBottom: "1rem",
-            }}
-          />
-
-          {/* Description skeleton (3 lines) */}
-          <div style={{ marginTop: "1rem" }}>
-            <div
-              style={{
-                height: 14,
-                background: "#eee",
-                borderRadius: 4,
-                width: "100%",
-                marginBottom: 8,
-              }}
-            />
-            <div
-              style={{
-                height: 14,
-                background: "#eee",
-                borderRadius: 4,
-                width: "95%",
-                marginBottom: 8,
-              }}
-            />
-            <div
-              style={{
-                height: 14,
-                background: "#eee",
-                borderRadius: 4,
-                width: "60%",
-              }}
-            />
+        {/* Right: details */}
+        <div className="flex flex-col space-y-6">
+          <div>
+            <Skeleton className="h-9 w-4/5" />
+            <Skeleton className="mt-2 h-3 w-24" />
           </div>
 
-          {/* Add to cart button skeleton */}
-          <div
-            style={{
-              height: 48,
-              background: "#eee",
-              borderRadius: 4,
-              width: "100%",
-              marginTop: "1.5rem",
-            }}
-          />
+          <div className="border-y border-gray-200 py-4">
+            <Skeleton className="h-8 w-40" />
+          </div>
+
+          <Skeleton className="h-5 w-28 rounded-full" />
+
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-[95%]" />
+            <Skeleton className="h-4 w-3/5" />
+          </div>
+
+          <Skeleton className="h-12 w-48 rounded-full" />
         </div>
       </div>
     </div>

@@ -38,3 +38,8 @@ export async function reconcileTransactions({ perPage, page }) {
 export async function listRecentOrders({ limit = 25 } = {}) {
   return orderRepository.findRecent(limit);
 }
+
+// Dashboard summary numbers: total revenue, orders today, pending count.
+export async function getOrderStats() {
+  return orderRepository.findStats();
+}

@@ -1,6 +1,10 @@
 import * as orderRepository from "#repositories/orderRepository.js";
 import { updateOrderStatus } from "#services/orderLifecycleService.js";
-import { listRecentOrders, reconcileTransactions } from "#services/adminService.js";
+import {
+  getOrderStats,
+  listRecentOrders,
+  reconcileTransactions,
+} from "#services/adminService.js";
 
 export async function getTransactionReconciliation(req, res) {
   const perPage = Math.min(parseInt(req.query.perPage, 10) || 10, 50);
@@ -17,6 +21,26 @@ export async function getRecentOrders(req, res) {
   const orders = await listRecentOrders({ limit });
 
   res.json({ orders });
+}
+
+export async function getStats(req, res) {
+  const stats = await getOrderStats();
+  res.json(stats);
+}
+
+// Full order (including customer phone + shipping address) with line items,
+// for the admin order detail page.
+export async function getOrderDetail(req, res) {
+  const { reference } = req.params;
+
+  const order = await orderRepository.findFullByReference(reference);
+  if (!order) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+
+  const items = await orderRepository.findItemsByOrderId(order.id);
+
+  res.json({ order, items });
 }
 
 // Admin-driven status changes (ship / deliver / cancel). Transition rules and

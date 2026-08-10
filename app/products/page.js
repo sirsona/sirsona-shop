@@ -1,4 +1,5 @@
 import ProductCard from "@/app/components/ProductCard";
+import EmptyState from "@/app/components/ui/EmptyState";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 
@@ -86,25 +87,24 @@ export default async function ProductsPage({ searchParams }) {
       )}
 
       {products.length === 0 ? (
-        <div className="rounded-3xl border border-gray-100 bg-gray-50 py-20 text-center">
-          <div className="text-5xl">📦</div>
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">
-            No products available
-          </h2>
-          <p className="mt-2 text-gray-600">
-            {activeCategory
+        <EmptyState
+          icon="📦"
+          title="No products available"
+          copy={
+            activeCategory
               ? `Nothing in "${activeCategory}" right now — check back later.`
-              : "Check back later for new arrivals."}
-          </p>
+              : "Check back later for new arrivals."
+          }
+        >
           {activeCategory && (
             <Link
               href="/products"
-              className="mt-6 inline-block rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
+              className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900"
             >
               Show all products
             </Link>
           )}
-        </div>
+        </EmptyState>
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((p) => (

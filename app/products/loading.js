@@ -1,50 +1,36 @@
+import Skeleton from "@/app/components/ui/Skeleton";
+
 export default function ProductsLoading() {
   return (
-    <main style={{ maxWidth: 900, margin: "0 auto", padding: "2rem" }}>
-      <h1>All Products</h1>
+    <main className="mx-auto max-w-7xl px-6 py-16">
+      {/* Header */}
+      <div className="mb-10 flex items-center justify-between">
+        <div>
+          <Skeleton className="h-9 w-64" />
+          <Skeleton className="mt-3 h-4 w-96" />
+        </div>
+        <Skeleton className="h-4 w-20" />
+      </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          gap: "1.5rem",
-          marginTop: "1.5rem",
-        }}
-      >
+      {/* Category pills */}
+      <div className="mb-8 flex flex-wrap gap-2">
+        {[0, 1, 2].map((i) => (
+          <Skeleton key={i} className="h-8 w-20 rounded-full" />
+        ))}
+      </div>
+
+      {/* Product grid */}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            style={{
-              border: "1px solid #eee",
-              borderRadius: 8,
-              overflow: "hidden",
-            }}
+            className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm"
           >
-            <div
-              style={{
-                width: "100%",
-                aspectRatio: "1 / 1",
-                background: "#eee",
-              }}
-            />
-            <div style={{ padding: "0.75rem" }}>
-              <div
-                style={{
-                  height: 14,
-                  background: "#eee",
-                  borderRadius: 4,
-                  width: "75%",
-                }}
-              />
-              <div
-                style={{
-                  height: 12,
-                  background: "#eee",
-                  borderRadius: 4,
-                  width: "50%",
-                  marginTop: 8,
-                }}
-              />
+            <Skeleton className="aspect-[4/5] w-full rounded-2xl" />
+            <div className="mt-5">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="mt-2 h-6 w-1/3" />
+              <Skeleton className="mt-3 h-5 w-20 rounded-full" />
             </div>
           </div>
         ))}

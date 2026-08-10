@@ -22,14 +22,21 @@ const TRANSITIONS = {
 export default function AdminOrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(null);
   const [error, setError] = useState(null);
   const [choices, setChoices] = useState({});
 
   useEffect(() => {
-    apiFetch("/api/admin/orders", { credentials: "include" })
-      .then((data) => setOrders(data.orders || []))
+    Promise.all([
+      apiFetch("/api/admin/orders", { credentials: "include" }),
+      apiFetch("/api/admin/stats", { credentials: "include" }),
+    ])
+      .then(([ordersData, statsData]) => {
+        setOrders(ordersData.orders || []);
+        setStats(statsData);
+      })
       .catch(() => router.replace("/admin/login"))
       .finally(() => setLoading(false));
   }, [router]);
@@ -85,6 +92,30 @@ export default function AdminOrdersPage() {
         </div>
       </PageHeader>
 
+      {/* Stat cards */}
+      {stats && (
+        <div className="mb-8 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <div className="text-sm text-gray-500">Total revenue</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">
+              KSh {(stats.revenue_cents / 100).toLocaleString()}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <div className="text-sm text-gray-500">Orders today</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">
+              {stats.orders_today}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <div className="text-sm text-gray-500">Pending payments</div>
+            <div className="mt-1 text-2xl font-bold text-gray-900">
+              {stats.pending_count}
+            </div>
+          </div>
+        </div>
+      )}
+
       {error && (
         <p className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
           {error}
@@ -114,7 +145,7 @@ export default function AdminOrdersPage() {
                   <tr key={o.paystack_reference}>
                     <td className="px-5 py-3">
                       <Link
-                        href={`/orders/${o.paystack_reference}`}
+                        href={`/admin/orders/${o.paystack_reference}`}
                         className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
                       >
                         {o.paystack_reference.slice(0, 20)}…

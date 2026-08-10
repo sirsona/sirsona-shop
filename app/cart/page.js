@@ -1,11 +1,13 @@
 "use client";
 
 import CartSummary from "@/app/components/CartSummary";
+import EmptyState from "@/app/components/ui/EmptyState";
 import Button from "@/app/components/ui/Button";
 import PageHeader from "@/app/components/ui/PageHeader";
 import { apiFetch } from "@/lib/api";
 import { clearCart, readCart, updateCartQuantity } from "@/lib/cart";
-import Link from "next/link";
+import { X } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function CartPage() {
@@ -52,12 +54,13 @@ export default function CartPage() {
     return (
       <main className="mx-auto max-w-3xl px-6 py-16">
         <PageHeader title="Your cart is empty" />
-        <p className="text-gray-600">
-          You have not added anything yet.
-        </p>
-        <div className="mt-8">
+        <EmptyState
+          icon="🛒"
+          title="Nothing here yet"
+          copy="Add some products to get started — your cart items will show up here."
+        >
           <Button href="/products">Browse products</Button>
-        </div>
+        </EmptyState>
       </main>
     );
   }
@@ -68,12 +71,21 @@ export default function CartPage() {
 
       <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white px-6 shadow-sm">
         {lines.map(({ product, quantity, lineTotalCents }) => (
-          <div
-            key={product.id}
-            className="flex flex-wrap items-center gap-4 py-4"
-          >
-            <div className="flex-1">
-              <div className="font-semibold text-gray-900">{product.name}</div>
+          <div key={product.id} className="flex items-center gap-4 py-4">
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+              <Image
+                src={product.image_url || "/placeholder.png"}
+                alt={product.name}
+                fill
+                sizes="56px"
+                className="object-cover"
+              />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="truncate font-semibold text-gray-900">
+                {product.name}
+              </div>
               <div className="mt-0.5 text-sm text-gray-600">
                 KSh {(product.price_cents / 100).toLocaleString()} each
               </div>
@@ -94,6 +106,14 @@ export default function CartPage() {
             <div className="w-28 text-right font-medium text-gray-900">
               KSh {(lineTotalCents / 100).toLocaleString()}
             </div>
+
+            <button
+              onClick={() => handleQuantityChange(product.id, 0)}
+              aria-label={`Remove ${product.name} from cart`}
+              className="text-gray-400 transition hover:text-red-600"
+            >
+              <X size={18} />
+            </button>
           </div>
         ))}
       </div>

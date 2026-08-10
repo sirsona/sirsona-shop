@@ -2,6 +2,8 @@
 
 import CartSummary from "@/app/components/CartSummary";
 import PaystackCheckoutButton from "@/app/components/PaystackCheckoutButton";
+import Button from "@/app/components/ui/Button";
+import EmptyState from "@/app/components/ui/EmptyState";
 import Field, { inputClass } from "@/app/components/ui/Field";
 import PageHeader from "@/app/components/ui/PageHeader";
 import { apiFetch } from "@/lib/api";
@@ -74,9 +76,13 @@ export default function CheckoutPage() {
     return (
       <main className="mx-auto max-w-xl px-6 py-16">
         <PageHeader title="Nothing to check out" />
-        <p className="text-gray-600">
-          Your cart is empty. Add some products first.
-        </p>
+        <EmptyState
+          icon="🛒"
+          title="Your cart is empty"
+          copy="Add some products first, then come back to check out."
+        >
+          <Button href="/products">Browse products</Button>
+        </EmptyState>
       </main>
     );
   }

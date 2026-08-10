@@ -44,6 +44,20 @@ export async function findByReference(reference, executor = pool) {
   return rows[0] ?? null;
 }
 
+// Full order row including contact/shipping details — used by the admin
+// order detail page (the customer-facing page deliberately excludes these).
+export async function findFullByReference(reference, executor = pool) {
+  const { rows } = await executor.query(
+    `SELECT id, paystack_reference, customer_name, customer_email,
+            customer_phone, shipping_address, payment_channel,
+            status, total_cents, created_at
+     FROM orders
+     WHERE paystack_reference = $1`,
+    [reference],
+  );
+  return rows[0] ?? null;
+}
+
 // Just what the payment paths need: the id to update, the status for the
 // idempotency guard, and the total to verify the paid amount against.
 // Shared by the verify redirect and the webhook.
@@ -118,4 +132,16 @@ export async function findRecent(limit = 25, executor = pool) {
     [limit],
   );
   return rows;
+}
+
+// Summary numbers for the admin dashboard stat cards.
+export async function findStats(executor = pool) {
+  const { rows } = await executor.query(
+    `SELECT
+       COALESCE(SUM(total_cents) FILTER (WHERE status = 'paid'), 0) AS revenue_cents,
+       COUNT(*) FILTER (WHERE created_at::date = CURRENT_DATE) AS orders_today,
+       COUNT(*) FILTER (WHERE status = 'pending') AS pending_count
+     FROM orders`,
+  );
+  return rows[0];
 }

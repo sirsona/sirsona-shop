@@ -1,4 +1,5 @@
 import Badge from "@/app/components/ui/Badge";
+import EmptyState from "@/app/components/ui/EmptyState";
 import PageHeader from "@/app/components/ui/PageHeader";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
@@ -61,9 +62,11 @@ export default async function MyOrdersPage({ searchParams }) {
               Could not load orders. Please try again.
             </p>
           ) : orders.length === 0 ? (
-            <p className="text-gray-600">
-              No orders found for <strong>{cleanPhone}</strong>.
-            </p>
+            <EmptyState
+              icon="📋"
+              title="No orders found"
+              copy={`We couldn't find any orders for ${cleanPhone}. Double-check the number and try again.`}
+            />
           ) : (
             <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white px-6 shadow-sm">
               {orders.map((o) => (

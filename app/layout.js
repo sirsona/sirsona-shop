@@ -3,7 +3,7 @@
 // ============================================================
 
 import AxeDevtools from "@/app/components/AxeDevtools"; // Accessibility tool (dev only)
-import CartCounter from "@/app/components/CartCounter"; // Live cart badge
+import Header from "@/app/components/Header"; // Sticky header with nav + cart badge
 import { Inter } from "next/font/google"; // Self‑hosted Google Fonts
 import Link from "next/link"; // Client‑side navigation
 import "./globals.css"; // Tailwind + global styles
@@ -50,33 +50,9 @@ export default function RootLayout({ children }) {
         className={`${inter.className} flex min-h-screen flex-col bg-white text-gray-900 antialiased`}
       >
         {/* ----------------------------------------------------
-            Header (Semantic HTML)
+            Header (mobile nav + active link highlighting)
            ---------------------------------------------------- */}
-        <header className="sticky top-0 z-10 border-b border-gray-100 bg-white/95 backdrop-blur">
-          <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <Link
-              href="/"
-              className="text-lg font-bold tracking-tight text-gray-900"
-            >
-              Mctaba Shop
-            </Link>
-
-            <div className="flex items-center gap-6 text-sm font-medium text-gray-600">
-              <Link href="/products" className="transition hover:text-gray-900">
-                Products
-              </Link>
-              <Link href="/about" className="transition hover:text-gray-900">
-                About
-              </Link>
-              <Link href="/contact" className="transition hover:text-gray-900">
-                Contact
-              </Link>
-
-              {/* Live cart badge (Client Component) */}
-              <CartCounter />
-            </div>
-          </nav>
-        </header>
+        <Header />
 
         {/* ----------------------------------------------------
             Main Content Area — expands to push footer down
@@ -86,8 +62,51 @@ export default function RootLayout({ children }) {
         {/* ----------------------------------------------------
             Footer (Semantic HTML)
            ---------------------------------------------------- */}
-        <footer className="border-t border-gray-100 bg-gray-50 py-6 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} Mctaba Shop
+        <footer className="border-t border-gray-100 bg-gray-50">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row">
+            <div className="text-center sm:text-left">
+              <Link href="/" className="text-base font-bold tracking-tight text-gray-900">
+                Mctaba Shop
+              </Link>
+              <p className="mt-1 text-sm text-gray-500">
+                Good things at fair prices.
+              </p>
+            </div>
+
+            <nav
+              aria-label="Footer"
+              className="flex flex-wrap items-center justify-center gap-5 text-sm text-gray-600"
+            >
+              <Link href="/products" className="transition hover:text-gray-900">
+                Products
+              </Link>
+              <Link href="/about" className="transition hover:text-gray-900">
+                About
+              </Link>
+              <Link href="/contact" className="transition hover:text-gray-900">
+                Contact
+              </Link>
+              <Link href="/admin/login" className="transition hover:text-gray-900">
+                Admin
+              </Link>
+            </nav>
+
+            <div className="flex items-center gap-2">
+              {["Paystack", "M-Pesa", "Card"].map((p) => (
+                <span
+                  key={p}
+                  className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600"
+                >
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 py-4 text-center text-xs text-gray-400">
+            &copy; {new Date().getFullYear()} Mctaba Shop · Payments powered by
+            Paystack
+          </div>
         </footer>
 
         {/* ----------------------------------------------------

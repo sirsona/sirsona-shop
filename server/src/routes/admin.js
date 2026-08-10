@@ -1,5 +1,7 @@
 import {
+  getOrderDetail,
   getRecentOrders,
+  getStats,
   getTransactionReconciliation,
   updateOrderStatusByReference,
 } from "#controllers/adminController.js";
@@ -17,6 +19,12 @@ adminRouter.get("/transactions", asyncHandler(getTransactionReconciliation));
 
 // Get the most recent orders from the database
 adminRouter.get("/orders", asyncHandler(getRecentOrders));
+
+// Dashboard summary numbers
+adminRouter.get("/stats", asyncHandler(getStats));
+
+// Full order detail for the admin page (must come AFTER /orders and /stats)
+adminRouter.get("/orders/:reference", asyncHandler(getOrderDetail));
 
 // Admin-driven status changes — transition rules + restock in the service
 adminRouter.patch(
